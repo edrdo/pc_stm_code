@@ -6,7 +6,7 @@ public class TestBlockingQueue {
   public static void main(String[] args) throws InterruptedException {
     BlockingQueue<Integer> a  = new BlockingQueue<>(); 
     BlockingQueue<Integer> b  = new BlockingQueue<>(); 
-    int N = 100;
+    int N = 10;
     
     Thread t1 = new Thread(() -> {
       for (int i = 0; i < N; i++) {
