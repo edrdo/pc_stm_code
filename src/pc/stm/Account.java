@@ -49,8 +49,9 @@ public class Account {
     try {
       STM.atomic(() -> {
         b.deposit(value);
-        // System.out.println(b); // Intermediate state will never be commited
-                                  // if transaction fails in withdraw
+        // System.out.println(b); 
+        // Intermediate state will never be commited
+        // if transaction fails in withdraw
         a.withdraw(value);
       });
       return true;
