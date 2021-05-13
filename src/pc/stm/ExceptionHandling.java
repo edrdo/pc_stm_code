@@ -108,7 +108,7 @@ public class ExceptionHandling {
       try {
         STM.atomic(() -> {
           a.set(true);
-          // exception will roll back update of a
+          // exception thrown will commit update of a
           throw new ControlFlowException(); 
         });
       } 
