@@ -10,23 +10,38 @@ public class TestBlockingQueue {
     
     Thread t1 = new Thread(() -> {
       for (int i = 0; i < N; i++) {
-        a.add(i);
-        System.out.println("added " + i);
+        int v = i;
+        STM.atomic(() -> {
+          a.add(v);
+          a.dump();
+          STM.afterCommit(() -> System.out.println("a: added " + v + "\n---"));
+        });
       }
     });
     
     Thread t2 = new Thread(() -> {
       for (int i = 0; i < N; i++) {
-        STM.atomic(() -> b.add(a.remove()));
+        STM.atomic(() -> {
+          int v = a.remove();
+          b.add(v);
+          a.dump();
+          b.dump();
+          STM.afterCommit(() -> {
+            System.out.println("a: removed " + v);
+            System.out.println("b: added " + v + "\n---");
+          });
+        });
       }
     });
-
     
     Thread t3 = new Thread(() -> {
       for (int i = 0; i < N; i++) {
-        int v = b.remove();
-        System.out.println("removed " + v);
-      }
+        STM.atomic(() -> {
+          int v = b.remove();
+          b.dump();
+          STM.afterCommit(() -> System.out.println("removed " + v + "\n---"));
+        });
+      } 
     });
     
     t1.start();
